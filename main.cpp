@@ -1,10 +1,15 @@
 #include <iostream>
 
+//correct number of points
 bool pointCorrect(std::string str){
     char ch = '.';
     int point = 0;
 
-    for(int i = 0; i < str.length(); i++){
+    if(str[0] == ch || str[str.length() - 1] == ch){
+        return false;
+    }
+
+    for(int i = 0; i < str.length() - 1; i++){
 
         if(str[i] == ch){
             point ++;
@@ -12,28 +17,27 @@ bool pointCorrect(std::string str){
             return false;
         }
 
-        if(str[0] == ch || str[str.length() - 1] == ch || str[i] == ch && str[i + 1] == ch){
+        if(str[i] == ch && str[i + 1] == ch){
             return false;
         }
     }
 
-    if(point != 3){
-        return false;
-    }
-    return true;
+    return point == 3;
 }
 
-int strIndex(std::string str){
-
+//get index dot
+int strIndexPoint(std::string str){
 
     for(int i = 0; i < str.length(); i++){
         if(str[i] == '.'){
             return i;
         }
     }
+
     return -1;
 }
 
+//trim the string from the end
 std::string substrEnd(std::string str, int index){
     std::string strResult;
 
@@ -44,6 +48,7 @@ std::string substrEnd(std::string str, int index){
     return strResult;
 }
 
+//trim the line from the beginning
 std::string substrStart(std::string str, int index){
     std::string strResult;
 
@@ -54,6 +59,7 @@ std::string substrStart(std::string str, int index){
     return strResult;
 }
 
+//check for the number of characters and the presence of zeros at the beginning
 bool valueValidation(std::string str){
 
     if(str.size() > 3){
@@ -64,40 +70,51 @@ bool valueValidation(std::string str){
         return true;
     }
 
-    for(int i = 0; i < str.length(); i++){
-        if(str.size() == 2 && str[0] == '0'){
-            return false;
-        }
-
-        if(str.size() == 3 && str[0] == '0' || str[1] == '0'){
-            return false;
-        }
+    if(str.size() > 1 && str[0] == '0'){
+        return false;
     }
+
     return true;
 }
 
+//check the IP address
 bool validationIP(std::string str){
 
     std::string strTemp = str;
-
+    int index;
 
     if(!pointCorrect(str)){
         return false;
     }
 
-    for(int i = 0; i <= 3; i ++){
-        if(!valueValidation(substrStart(strTemp, strIndex(strTemp)))){
-            return false;
+    for(int i = 0; i < 4; i ++){
+        index = strIndexPoint(strTemp);
+
+        if(index != - 1){
+            if(!valueValidation(substrStart(strTemp, index))){
+                return false;
+            }
+        }else{
+            if(!valueValidation(strTemp)){
+                return false;
+            }
         }
-        strTemp = substrEnd(strTemp, strIndex(strTemp) + 1);
+
+        strTemp = substrEnd(strTemp, strIndexPoint(strTemp) + 1);
     }
 
     return true;
 }
 
 int main() {
-    std::string ipCorrect = "127.0.255.1";
-    std::string ipIncorrect = "90.256.258.033";
-    
-    std::cout << validationIP(ipCorrect) << std::endl;
+    std::string ipString;
+
+    std::cout << "Enter PI address!" << std::endl;
+    std::cin >> ipString;
+
+    if(validationIP(ipString)){
+        std::cout << "Yes" << std::endl;
+    }else{
+        std::cout << "No" << std::endl;
+    }
 }
