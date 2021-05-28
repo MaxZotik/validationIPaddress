@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 //correct number of points
 bool pointCorrect(std::string str){
@@ -74,6 +75,12 @@ bool valueValidation(std::string str){
         return false;
     }
 
+    int num = std::stoi(str);
+
+    if(num < 0 || num > 255){
+        return false;
+    }
+
     return true;
 }
 
@@ -117,4 +124,6 @@ int main() {
     }else{
         std::cout << "No" << std::endl;
     }
+
+
 }
